@@ -1,0 +1,17 @@
+# Ambiente virtuale
+.venv/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+
+# File temporanei
+*.log
+page.html
+
+# VS Code
+.vscode/
+
+# Windows
+Thumbs.db
+desktop.ini
