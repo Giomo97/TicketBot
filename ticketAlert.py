@@ -26,7 +26,7 @@ def leggi_offer_ids(page) -> list[str]:
     page.reload(wait_until="domcontentloaded", timeout=60000)
 
     try:
-        page.wait_for_selector(".EventEntryList.js-EventEntryList", timeout=15000)
+        page.wait_for_selector("EventEntryList.js-EventEntryList", timeout=15000)
     except PlaywrightTimeout:
         return []
 
