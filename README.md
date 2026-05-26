@@ -15,10 +15,10 @@ Poiché usa il tuo browser reale già aperto, il sito non rileva alcuna attivit�
 
 ## Installazione
 
-```bash
+```powershell
 python -m venv .venv
 .venv\Scripts\pip install playwright
-python -m playwright install chromium
+.venv\Scripts\python.exe -m playwright install chromium
 ```
 
 ## Utilizzo
@@ -35,18 +35,18 @@ Start-Process "C:\Program Files\Google\Chrome\Application\chrome.exe" `
 
 Verifica che funzioni aprendo nel browser: `http://localhost:9222/json`
 
-### 2. Configura l'URL dell'evento
+### 2. Avvia lo script
 
-Modifica `ticketAlert.py` e imposta la variabile `URL` con la pagina Fansale da monitorare:
-
-```python
-URL = "https://www.fansale.it/tickets/all/artista/000000/00000000"
-```
-
-### 3. Avvia lo script
+Passa l'URL della pagina Fansale come argomento:
 
 ```powershell
-.venv\Scripts\python.exe ticketAlert.py
+.venv\Scripts\python.exe ticketAlert.py "https://www.fansale.it/tickets/all/artista/000000/00000000"
+```
+
+Con intervallo di aggiornamento personalizzato (es. 30 secondi):
+
+```powershell
+.venv\Scripts\python.exe ticketAlert.py "https://www.fansale.it/tickets/all/artista/000000/00000000" --interval 30
 ```
 
 Per uscire usa `Ctrl+C`.
@@ -60,10 +60,9 @@ Per uscire usa `Ctrl+C`.
 | Caricamento fallito | Riprova al ciclo successivo senza modificare la lista |
 | Premi un tasto dopo il popup | Il monitoraggio riprende |
 
-## Configurazione
+## Opzioni CLI
 
-| Variabile | Descrizione | Default |
+| Argomento | Descrizione | Obbligatorio |
 |---|---|---|
-| `URL` | Pagina Fansale da monitorare | — |
-| `REFRESH_INTERVAL` | Secondi tra un aggiornamento e l'altro | `15` |
-| `CDP_URL` | Indirizzo del debug port di Chrome | `http://localhost:9222` |
+| `url` | URL della pagina Fansale da monitorare | Sì |
+| `--interval` | Secondi tra un aggiornamento e l'altro (default: `15`) | No |

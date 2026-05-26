@@ -1,3 +1,4 @@
+import argparse
 import ctypes
 import msvcrt
 import time
@@ -5,7 +6,6 @@ from datetime import datetime
 
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
 
-URL = "https://www.fansale.it/tickets/all/geolier/577164/20238176"
 REFRESH_INTERVAL = 15  # secondi tra un aggiornamento e l'altro
 CDP_URL = "http://localhost:9222"
 
@@ -37,14 +37,14 @@ def leggi_offer_ids(page) -> list[str]:
     ]
 
 
-def main() -> None:
+def main(url: str) -> None:
     with sync_playwright() as p:
         browser = p.chromium.connect_over_cdp(CDP_URL)
         context = browser.contexts[0]
         page = context.pages[0]
 
-        scrivi_riga(f"Connesso a Chrome. Navigazione verso: {URL}")
-        page.goto(URL, wait_until="domcontentloaded", timeout=60000)
+        scrivi_riga(f"Connesso a Chrome. Navigazione verso: {url}")
+        page.goto(url, wait_until="domcontentloaded", timeout=60000)
 
         # Accetta cookie se compare il banner
         try:
@@ -80,4 +80,14 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Monitora i biglietti su Fansale.it")
+    parser.add_argument("url", help="URL della pagina Fansale da monitorare")
+    parser.add_argument(
+        "--interval",
+        type=int,
+        default=REFRESH_INTERVAL,
+        help=f"Secondi tra un aggiornamento e l'altro (default: {REFRESH_INTERVAL})",
+    )
+    args = parser.parse_args()
+    REFRESH_INTERVAL = args.interval
+    main(args.url)
