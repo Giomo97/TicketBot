@@ -26,11 +26,21 @@ def leggi_offer_ids(page) -> list[str]:
     page.reload(wait_until="domcontentloaded", timeout=60000)
 
     try:
-        page.wait_for_selector("EventEntryList.js-EventEntryList", timeout=15000)
+        page.wait_for_selector(".EventEntryList.js-EventEntryList", timeout=15000)
     except PlaywrightTimeout:
         return []
 
-    entries = page.query_selector_all("[data-offer-id]")
+    container = page.query_selector(".EventEntryList.js-EventEntryList")
+    if not container:
+        return []
+
+    entries = []
+    for _ in range(4):
+        entries = container.query_selector_all("[data-offer-id]")
+        if entries:
+            break
+        page.wait_for_timeout(500)
+
     return [
         eid for e in entries
         if (eid := e.get_attribute("data-offer-id")) and eid != "0"
